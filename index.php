@@ -21,7 +21,7 @@
 			echo json_encode($responseData);
 		} catch( Exception $e ){
 			$res->status(500);
-			$res->header('X-Status-Reason', $e->getMessage());
+			//$res->header('X-Status-Reason', $e->getMessage());
 		}
 	});
 	
@@ -30,8 +30,14 @@
 			$json = $app->request()->getBody();
 			$reqData = json_decode($json);
 			
-			if( $reqData == null || !isset($reqData->token) || !isset($reqData->openStatus)  )
-				throw new Exception();
+			if( $reqData == null )
+			  throw new Exception("Missing json body");
+
+			if( !isset($reqData->token) )
+			  throw new Exception("Missing token");
+
+			if( !isset($reqData->openStatus) )
+			  throw new Exception("Missing status parameter");
 			
 			$tokenVerifier = new TokenVerifier();
 			if( !$tokenVerifier->IsTokenValid($reqData->token) ){
@@ -45,7 +51,7 @@
 			
 		} catch (Exception $e) {
 			$app->response()->status(400);
-			$app->response()->header('X-Status-Reason', $e->getMessage());
+			//$app->response()->header('X-Status-Reason', $e->getMessage());
 		}
 	});
 	
