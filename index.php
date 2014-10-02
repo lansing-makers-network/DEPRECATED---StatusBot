@@ -4,7 +4,7 @@
 	\Slim\Slim::registerAutoloader();
 	include 'AutoLoader.php';
 	
-	$app = new \Slim\Slim();
+	$app = new \Slim\Slim(array('debug' => true));
 	
 	
 	$app->get('/status/', function () use ($app){
@@ -13,15 +13,17 @@
 		
 		try{
 			$adapter = new StatusAdapter();
+			$status = $adapter->IsSpaceOpen();
 			$responseData = array(
-				"openStatus" => $adapter->IsSpaceOpen()
+				"openStatus" => $status['status'],
+				"updated" => $status['updated'],
 			);
 			
 			$res->header('Content-Type', 'application/json');
 			echo json_encode($responseData);
 		} catch( Exception $e ){
 			$res->status(500);
-			//$res->header('X-Status-Reason', $e->getMessage());
+//			$res->header('X-Status-Reason', $e->getMessage());
 		}
 	});
 	
@@ -51,7 +53,7 @@
 			
 		} catch (Exception $e) {
 			$app->response()->status(400);
-			//$app->response()->header('X-Status-Reason', $e->getMessage());
+//			$app->response()->header('X-Status-Reason', $e->getMessage());
 		}
 	});
 	

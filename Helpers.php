@@ -8,6 +8,13 @@ class Helpers{
 	      return false;
 	   }
 	}
+	function asDateTime($value = null) {
+ 	  if (empty($value)) {
+	    return date('Y-m-d H:i:s');
+	  } else {
+	    return date('Y-m-d H:i:s', strtotime($value));
+	  }
+	}
 }
 
 
